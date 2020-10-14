@@ -1,7 +1,6 @@
 <?php require_once 'header.php'; ?>
 <?php require_once 'sidebar.php'; ?>
 <?php require_once 'config.php'; ?>
-<?php require_once 'functions.php' ?>
 <?php 
 
 global $image;
@@ -93,7 +92,36 @@ if (isset($_FILES["imageUpload"]["name"])) {
 
                             <tbody>
                                 <?php 
-                                displayProducts();
+
+                                global $conn;
+
+                                $sql = "SELECT `product_id`, `name`, `image`, `price`, `description`  FROM products";
+                                $result = $conn->query($sql);
+                            
+                                if ($result->num_rows > 0) {
+                                                                
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo '
+                                            <tr>
+                                                <form method="POST" action="">
+                                                <td><input type="checkbox" /></td>
+                                                <td>'.$row["product_id"].'</td>
+                                                <td>'.$row["name"].'</td>
+                                                <td><img src='.$row["image"].' style="width:30px; height:30px"></td>
+                                                <td>'.$row["price"].'</td>
+                                                <td>'.$row["description"].'</td>                                                
+                                                <td>
+                                                    <!-- Icons -->
+                                                    <input type="hidden" id="prid" name="prid" value="'.$row["product_id"].'">
+                                                    <button type="submit" class="editbtn" name="edit" style="width:50px "><img src="resources/images/icons/pencil.png" alt="Edit" /></button>
+                                                    <button type="submit" class="deletebtn" name="delete" style="width:50px "><img src="resources/images/icons/cross.png" alt="Delete" /></button>
+                                                </td>
+                                                </form>
+                                            </tr>
+                                        ';
+                                    }
+                                }
+                                $conn->close();
                                 
                                 ?>                                     
                             </tbody>                            
@@ -128,11 +156,11 @@ if (isset($_FILES["imageUpload"]["name"])) {
                                 <p>
                                     <label>Category</label>              
                                     <select id="dropdown" name="dropdown" class="small-input">
-                                        <option value="option1">Men</option>
-                                        <option value="option2">Women</option>
-                                        <option value="option3">Kids</option>
-                                        <option value="option4">Electronics</option>
-                                        <option value="option4">Sports</option>
+                                        <option value="Men">Men</option>
+                                        <option value="Women">Women</option>
+                                        <option value="Kids">Kids</option>
+                                        <option value="Electronics">Electronics</option>
+                                        <option value="Sports">Sports</option>
                                     </select>
                                 </p>
                                 
@@ -226,11 +254,36 @@ if (isset($_FILES["imageUpload"]["name"])) {
         var message = $('#textarea').val();
             $.ajax({
                 method: "POST",
-                url: "functions.php",
+                url: "addProduct.php",
                 dataType:"JSON",
                 data: {name : name, price: price, filename : filename, dropdown : dropdown, tags : tags, message : message}
             }).done(function (msg) {
-                header("Location: products.php");
+                alert(msg);
+            });
+        });
+
+        $('.editbtn').click(function () {
+        var id = $('#prid').val();
+        $.ajax({
+                method: "POST",
+                url: "updateProduct.php",
+                dataType:"JSON",
+                data: {id : id, nme: nme, img : img, prc : prc, des : des}
+            }).done(function (msg) {
+               // header("Location: products.php");
+            });
+        });
+
+        $('.deletebtn').click(function () {
+        var id = $('#prid').val();
+        $.ajax({
+                method: "POST",
+                url: "deleteProduct.php",
+                dataType:"JSON",
+                data: {id : id}
+            }).done(function (msg) {
+                alert(msg);
+               // header("Location: products.php");
             });
         });
     });
