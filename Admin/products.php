@@ -90,10 +90,58 @@ if (isset($_FILES["imageUpload"]["name"])) {
                                 </tr>
                             </tfoot>
 
-                            <tbody>
+                            <tbody>                                
                                 <?php 
 
-                                global $conn;
+                                if (isset($_POST["edit"])) {
+                                    $prod = $_POST["prid"];
+
+                                    $sql1 = "SELECT * FROM `products` WHERE `product_id`={$prod}";
+                                    $result1 = $conn->query($sql1);
+                                    $output = "";
+                                    if ($result1->num_rows > 0) {
+                                        while ($row1 = $result1 -> fetch_assoc()) {
+                                            echo '
+                                                <div id="updateform">
+                                                <form method="POST" action="">                                                    
+                                                    <input class="text-input small-input" type="hidden" id="updateid" name="updateid" value="'.$row1["product_id"].'" />
+                                                    <br />
+                                                
+                                                    <p>
+                                                    <label>Name</label>
+                                                        <input class="text-input small-input" type="text" id="updatename" name="updatename" value="'.$row1["name"].'" />
+                                                        <br />
+                                                    </p>
+
+                                                    <p>
+                                                        <label>Image</label>
+                                                            <input class="text-input small-input" type="text" id="updateimage" name="updateimage" value="'.$row1["name"].'"/>
+                                                            <br />
+                                                    </p>
+                                                    
+                                                    <p>
+                                                        <label>Price</label>
+                                                            <input class="text-input small-input" type="text" id="updateprice" name="updateprice" value="'.$row1["price"].'"/>
+                                                            <br />
+                                                    </p>
+
+                                                    <p>
+                                                    <label>Description</label>
+                                                        <textarea class="text-input textarea wysiwyg" id="updatetextarea" name="updatetextarea" cols="20" rows="5" text="'.$row1["description"].'"></textarea>
+                                                    </p>
+                                                    
+                                                    <p>
+                                                        <input class="Update" type="button" name="Update" value="Update Product" />
+                                                    </p>   
+                                                </form>
+                                            </div>';
+                                        }
+                                    }
+                                }                                
+
+                                ?>
+
+                                <?php 
 
                                 $sql = "SELECT `product_id`, `name`, `image`, `price`, `description`  FROM products";
                                 $result = $conn->query($sql);
@@ -121,9 +169,9 @@ if (isset($_FILES["imageUpload"]["name"])) {
                                         ';
                                     }
                                 }
-                                $conn->close();
                                 
-                                ?>                                     
+                                ?>  
+                                                                   
                             </tbody>                            
                     </table>
                         
@@ -154,13 +202,16 @@ if (isset($_FILES["imageUpload"]["name"])) {
                                 </p>
 
                                 <p>
-                                    <label>Category</label>              
                                     <select id="dropdown" name="dropdown" class="small-input">
-                                        <option value="Men">Men</option>
-                                        <option value="Women">Women</option>
-                                        <option value="Kids">Kids</option>
-                                        <option value="Electronics">Electronics</option>
-                                        <option value="Sports">Sports</option>
+                                        <option value="">Select Category</option>
+                                            <?php
+                                            $sql2 = "SELECT * FROM `categories`";
+                                            $result2 = $conn->query($sql2);
+                                            while ($row2 = $result2 -> fetch_assoc()) { 
+                                                ?>
+                                            <option value="<?php echo $row2['name'];?>">
+                                                <?php echo $row2['name']?></option>
+                                            <?php }?>
                                     </select>
                                 </p>
                                 
@@ -195,8 +246,7 @@ if (isset($_FILES["imageUpload"]["name"])) {
             </div> <!-- End .content-box -->
             
             
-            <div class="clear"></div>
-            
+            <div class="clear"></div>        
             
             <!-- Start Notifications -->
             
@@ -262,17 +312,33 @@ if (isset($_FILES["imageUpload"]["name"])) {
             });
         });
 
-        $('.editbtn').click(function () {
-        var id = $('#prid').val();
+        $('.Update').click(function () {
+        var updateid = $('#updateid').val();
+        var updatename = $('#updatename').val();
+        var updateprice = $('#updateprice').val();
+        var updateimage = $("#updateimage").val();
+        /*var updatedropdown = $('#updatedropdown option:selected').text();
+         var updatetags = [];
+        $.each($("input[name='updatetags']:checked"), function(){
+            updatetags.push($(this).val());
+        });*/
+        var updatemessage = $('#updatetextarea').val();
         $.ajax({
                 method: "POST",
                 url: "updateProduct.php",
                 dataType:"JSON",
-                data: {id : id, nme: nme, img : img, prc : prc, des : des}
+                data: {updateid : updateid, updatename : updatename, updateprice : updateprice, updateimage : updateimage, updatemessage : updatemessage}
             }).done(function (msg) {
                // header("Location: products.php");
             });
+
         });
+
+        
+        $(".Update").click(function(){
+            $("#updateform").hide();
+        });
+    
 
         $('.deletebtn').click(function () {
         var id = $('#prid').val();

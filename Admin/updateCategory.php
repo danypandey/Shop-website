@@ -5,8 +5,8 @@
  * 
  * PHP version 7.4.33
  * 
- * @category Products_Array
- * @package  Products_Array
+ * @category cateucts_Array
+ * @package  cateucts_Array
  * @author   Author <dindayalpandey1000@domain.com>
  * @license  http://opensourse.org/licesnces/DANY License
  * @link     https://localhost8080
@@ -14,12 +14,16 @@
 require_once 'config.php';
 
 global $conn;
-global $prd;
-if (isset($_POST["id"])) {
-    $prd = $_POST["id"];
-    $sql = "DELETE FROM `products` WHERE `product_id`='{$prd}'";
+global $cate;
+if (isset($_POST["updatecategory"])) {
+    $cate = $_POST;
+
+    $sql = "UPDATE `categories` SET `category`='{$cate["updatecategory"]}', `name`='{$cate["updatename"]}' WHERE `category`='{$cate["updatecategory"]}'";
     $result = $conn->query($sql);
+
     $conn->close();
-}
+
+    
+}   
 
 ?>

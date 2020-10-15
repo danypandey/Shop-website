@@ -14,16 +14,12 @@
 require_once 'config.php';
 
 global $conn;
-global $prod;
-if (isset($_POST["updateid"])) {
-    $prod = $_POST;
-
-    $sql = "UPDATE `products` SET `name`='{$prod["updatename"]}',`image`='{$prod["updateimage"]}', `price`='{$prod["updateprice"]}', `description`='{$prod["updatemessage"]}' WHERE `product_id`='{$prod["updateid"]}'";
+global $crd;
+if (isset($_POST["crids"])) {
+    $crd = $_POST["crids"];
+    $sql = "DELETE FROM `categories` WHERE `category`='{$crd}'";
     $result = $conn->query($sql);
-
     $conn->close();
-
-    
-}   
+}
 
 ?>

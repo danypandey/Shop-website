@@ -16,7 +16,7 @@ require_once 'config.php';
 global $product;
 global $conn;
 
-if (isset($_POST)) {
+if (isset($_POST[])) {
     $product =  $_POST;
     if (isset($product) && !empty($product)) {
         $sql = "INSERT INTO `products`(`name`, `image`, `price`, `category`, `tags`, `description`) VALUES ( '{$product["name"]}',
