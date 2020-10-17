@@ -1,4 +1,6 @@
+<?php session_start(); ?>
 <?php require_once 'header.php' ?>
+<?php require_once 'config.php' ?>
 
   <!-- / menu -->  
  
@@ -40,30 +42,42 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
-                        <td><a href="#"><img src="img/man/polo-shirt-1.png" alt="img"></a></td>
-                        <td><a class="aa-cart-title" href="#">Polo T-Shirt</a></td>
-                        <td>$250</td>
-                        <td><input class="aa-cart-quantity" type="number" value="1"></td>
-                        <td>$250</td>
-                      </tr>
-                      <tr>
-                        <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
-                        <td><a href="#"><img src="img/man/polo-shirt-2.png" alt="img"></a></td>
-                        <td><a class="aa-cart-title" href="#">Polo T-Shirt</a></td>
-                        <td>$150</td>
-                        <td><input class="aa-cart-quantity" type="number" value="1"></td>
-                        <td>$150</td>
-                      </tr>
-                      <tr>
-                        <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
-                        <td><a href="#"><img src="img/man/polo-shirt-3.png" alt="img"></a></td>
-                        <td><a class="aa-cart-title" href="#">Polo T-Shirt</a></td>
-                        <td>$50</td>
-                        <td><input class="aa-cart-quantity" type="number" value="1"></td>
-                        <td>$50</td>
-                      </tr>
+                    <?php
+
+                    if (empty($_SESSION['cart'])) {       
+                        global $cart ;
+                        $cart = array();
+                    } else {
+                        $cart = $_SESSION['cart'];
+                    }
+
+                    $cart[] = $_GET["productId"];
+                    $_SESSION['cart']=$cart;
+
+                    foreach ($_SESSION['cart'] as $key => $value) {
+                        $sql = "SELECT * FROM `products` WHERE `product_id`='{$value}'";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                                                        
+                            while ($row = $result->fetch_assoc()) {
+                                ?>
+
+                                <tr>
+                                    <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
+                                    <td><a href="#"><img src="<?php echo $row["image"] ?>" alt="img"></a></td>
+                                    <td><a class="aa-cart-title" href="#"><?php echo $row["name"] ?></a></td>
+                                    <td>$<?php echo $row["price"] ?></td>
+                                    <td><input class="aa-cart-quantity" type="number" value="1"></td>
+                                    <td>$<?php echo $row["price"] ?></td>
+                                </tr>
+
+                                <?php
+
+                            }
+                        }   
+                    }               
+                    ?>
                       <tr>
                         <td colspan="6" class="aa-cart-view-bottom">
                           <div class="aa-cart-coupon">

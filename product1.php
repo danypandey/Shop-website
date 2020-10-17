@@ -67,7 +67,7 @@
                 <li>
                   <figure>
                     <a class="aa-product-img" href="#"><img src="<?php echo $row["image"] ?>" style="width:300px; height:300px" alt="polo shirt img"></a>
-                    <a class="aa-add-card-btn"href="cart.php"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
+                    <a class="aa-add-card-btn" href="cart.php?productId=<?php echo $row["product_id"] ?>" ><span class="fa fa-shopping-cart"></span>Add To Cart</a>
                     <figcaption>
                       <h4 class="aa-product-title"><a href="#"><?php echo $row["name"] ?></a></h4>
                       <span class="aa-product-price">$<?php echo $row["price"] ?></span><span class="aa-product-price"><del><?php echo $row["price"] ?></del></span>
@@ -184,7 +184,7 @@
                                 </p>
                             </div>
                             <div class="aa-prod-view-bottom">
-                                <a href="cart.php" class="aa-add-to-cart-btn"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
+                                <a href="cart.php?productId=<?php echo $row1["product_id"] ?>" class="aa-add-to-cart-btn"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
                                 <a href="#" class="aa-add-to-cart-btn">View Details</a>
                             </div>
                             </div>
