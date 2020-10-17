@@ -93,15 +93,14 @@
               <script>
                     $(document).ready(function(){
                         $(document).on("click","#one", function(){
-                            var id =$(this).data("id");
-                            alert(id);                           
+                            var id =$(this).data("id");                          
                         });
                     });
               </script>
 
                 <?php 
 
-                $pd;
+                $pd = "";
 
                 $sql1 = "SELECT * FROM `products` WHERE `product_id`='{$pd}' ";
                 $result1 = $conn->query($sql);
@@ -183,7 +182,7 @@
                             </div>
                             <div class="aa-prod-view-bottom">
                                 <a href="cart.php?productId=<?php echo $row1["product_id"] ?>" class="aa-add-to-cart-btn"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
-                                <a href="#" class="aa-add-to-cart-btn">View Details</a>
+                                <a href="product-detail.php?productId=<?php echo $row1["product_id"] ?>" class="aa-add-to-cart-btn">View Details</a>
                             </div>
                             </div>
                         </div>
@@ -236,7 +235,7 @@
 
                 while ($row2=mysqli_fetch_assoc($result2)) {
                     ?>
-                    <li><a href="#"><?php echo $row2['name'] ?></a></li> 
+                    <li><a href="categorywisedisplay.php?categoryId=<?php echo $row2["category"] ?>"><?php echo $row2['name'] ?></a></li> 
                 <?php } ?>
               </ul>
             </div>

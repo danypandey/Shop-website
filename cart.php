@@ -51,8 +51,11 @@
                         $cart = $_SESSION['cart'];
                     }
 
-                    $cart[] = $_GET["productId"];
-                    $_SESSION['cart']=$cart;
+                    if (isset($_GET["productId"])) {
+                        $cart[] = $_GET["productId"];
+                        $_SESSION['cart']=$cart;
+                    }
+                    
 
                     foreach ($_SESSION['cart'] as $key => $value) {
                         $sql = "SELECT * FROM `products` WHERE `product_id`='{$value}'";
@@ -64,7 +67,7 @@
                                 ?>
 
                                 <tr>
-                                    <td><a class="remove" href="#"><fa class="fa fa-close"></fa></a></td>
+                                    <td><a class="remove" href="?dId=<?php echo $key ?>"><fa class="fa fa-close"></fa></a></td>
                                     <td><a href="#"><img src="<?php echo $row["image"] ?>" alt="img"></a></td>
                                     <td><a class="aa-cart-title" href="#"><?php echo $row["name"] ?></a></td>
                                     <td>$<?php echo $row["price"] ?></td>
@@ -75,8 +78,13 @@
                                 <?php
 
                             }
-                        }   
-                    }               
+                        }
+
+                    }   
+                    if (isset($_GET['dId'])) {
+                        $id=$_GET['dId'];
+                        unset($_SESSION['cart'][$id]);
+                     }            
                     ?>
                       <tr>
                         <td colspan="6" class="aa-cart-view-bottom">
