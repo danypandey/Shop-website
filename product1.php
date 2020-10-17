@@ -56,7 +56,7 @@
 
               <?php 
 
-                $sql = "SELECT * FROM products LIMIT 9";
+                $sql = "SELECT * FROM products LIMIT 9, 3";
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
