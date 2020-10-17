@@ -20,9 +20,11 @@ if (isset($_POST["category"])) {
     $category =  $_POST;
     if (isset($category) && !empty($category)) {
         $sql = "INSERT INTO `categories`(`category`, `name`) VALUES ('{$category["category"]}', '{$category["name"]}')";
-
-        $result = $conn->query($sql);
-        
+        if (mysqli_query($conn, $sql)) {            
+            echo 1;
+        } else {
+            echo "Error : " .$sql. "<br>" .$conn -> error;
+        }
         $conn->close();
     }
 }

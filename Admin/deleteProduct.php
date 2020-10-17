@@ -18,7 +18,11 @@ global $prd;
 if (isset($_POST["id"])) {
     $prd = $_POST["id"];
     $sql = "DELETE FROM `products` WHERE `product_id`='{$prd}'";
-    $result = $conn->query($sql);
+    if (mysqli_query($conn, $sql)) {            
+        echo 1;
+    } else {
+        echo "Error : " .$sql. "<br>" .$conn -> error;
+    }
     $conn->close();
 }
 

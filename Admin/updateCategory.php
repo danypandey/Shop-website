@@ -19,8 +19,11 @@ if (isset($_POST["updatecategory"])) {
     $cate = $_POST;
 
     $sql = "UPDATE `categories` SET `category`='{$cate["updatecategory"]}', `name`='{$cate["updatename"]}' WHERE `category`='{$cate["updatecategory"]}'";
-    $result = $conn->query($sql);
-
+    if (mysqli_query($conn, $sql)) {            
+        echo 1;
+    } else {
+        echo "Error : " .$sql. "<br>" .$conn -> error;
+    }
     $conn->close();
 
     

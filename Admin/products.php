@@ -115,7 +115,7 @@ if (isset($_FILES["imageUpload"]["name"])) {
 
                                                     <p>
                                                         <label>Image</label>
-                                                            <input class="text-input small-input" type="text" id="updateimage" name="updateimage" value="'.$row1["name"].'"/>
+                                                            <input class="text-input small-input" type="text" id="updateimage" name="updateimage" value="'.$row1["image"].'"/>
                                                             <br />
                                                     </p>
                                                     
@@ -162,7 +162,7 @@ if (isset($_FILES["imageUpload"]["name"])) {
                                                     <!-- Icons -->
                                                     <input type="hidden" id="prid" name="prid" value="'.$row["product_id"].'">
                                                     <button type="submit" class="editbtn" name="edit" style="width:50px "><img src="resources/images/icons/pencil.png" alt="Edit" /></button>
-                                                    <button type="submit" class="deletebtn" name="delete" style="width:50px "><img src="resources/images/icons/cross.png" alt="Delete" /></button>
+                                                    <button type="submit" class="deletebtn" data-did="'.$row["product_id"].'" name="delete" style="width:50px "><img src="resources/images/icons/cross.png" alt="Delete" /></button>
                                                 </td>
                                                 </form>
                                             </tr>
@@ -296,19 +296,23 @@ if (isset($_FILES["imageUpload"]["name"])) {
         var name = $('#name').val();
         var price = $('#price').val();
         var filename = $("#imageUpload").val();
-        var dropdown = $('#dropdown option:selected').text();
         var tags = [];
         $.each($("input[name='tags']:checked"), function(){
             tags.push($(this).val());
         });
+        var dropdown=$("#dropdown").val();
         var message = $('#textarea').val();
             $.ajax({
                 method: "POST",
                 url: "addProduct.php",
-                dataType:"JSON",
-                data: {name : name, price: price, filename : filename, dropdown : dropdown, tags : tags, message : message}
-            }).done(function (msg) {
-                alert(msg);
+                data: {name : name, price: price, filename : filename, tags : tags, dropdown : dropdown, message : message},
+                success : function(data){
+                if(data == 1){
+                alert("Successfully Added");  
+                } else {
+                alert("failed");
+                }
+            }
             });
         });
 
@@ -326,12 +330,15 @@ if (isset($_FILES["imageUpload"]["name"])) {
         $.ajax({
                 method: "POST",
                 url: "updateProduct.php",
-                dataType:"JSON",
-                data: {updateid : updateid, updatename : updatename, updateprice : updateprice, updateimage : updateimage, updatemessage : updatemessage}
-            }).done(function (msg) {
-               // header("Location: products.php");
-            });
-
+                data: {updateid : updateid, updatename : updatename, updateprice : updateprice, updateimage : updateimage, updatemessage : updatemessage},
+                success : function(data){
+                if(data == 1){
+                alert("Successfully Updated");  
+                } else {
+                alert("failed");
+                }
+            }
+            })
         });
 
         
@@ -341,16 +348,19 @@ if (isset($_FILES["imageUpload"]["name"])) {
     
 
         $('.deletebtn').click(function () {
-        var id = $('#prid').val();
+        var id = $(this).data('did');
         $.ajax({
                 method: "POST",
                 url: "deleteProduct.php",
-                dataType:"JSON",
-                data: {id : id}
-            }).done(function (msg) {
-                alert(msg);
-               // header("Location: products.php");
-            });
+                data: {id : id},
+                success : function(data){
+                if(data == 1){
+                alert("Successfully Deleted");  
+                } else {
+                alert("failed");
+                }
+            }
+            })
         });
     });
     </script>

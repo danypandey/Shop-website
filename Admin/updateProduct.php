@@ -19,11 +19,12 @@ if (isset($_POST["updateid"])) {
     $prod = $_POST;
 
     $sql = "UPDATE `products` SET `name`='{$prod["updatename"]}',`image`='{$prod["updateimage"]}', `price`='{$prod["updateprice"]}', `description`='{$prod["updatemessage"]}' WHERE `product_id`='{$prod["updateid"]}'";
-    $result = $conn->query($sql);
-
+    if (mysqli_query($conn, $sql)) {            
+        echo 1;
+    } else {
+        echo "Error : " .$sql. "<br>" .$conn -> error;
+    }
     $conn->close();
-
-    
 }   
 
 ?>

@@ -15,15 +15,19 @@ require_once 'config.php';
 
 global $product;
 global $conn;
-
+$array =$_POST["tags"];
+//$arr[]=implode(" ", $array);
+$arr=(serialize($array));
 if (isset($_POST)) {
     $product =  $_POST;
     if (isset($product) && !empty($product)) {
         $sql = "INSERT INTO `products`(`name`, `image`, `price`, `category`, `tags`, `description`) VALUES ( '{$product["name"]}',
-            '{$product["filename"]}', '{$product["price"]}', '{$product["dropdown"]}','{$product["tags"]}', '{$product["message"]}')";
-
-        $result = $conn->query($sql);
-        
+            '{$product["filename"]}', '{$product["price"]}', (SELECT `category` FROM categories WHERE `name` = '{$product["dropdown"]}'), '{$arr}', '{$product["message"]}')";
+        if (mysqli_query($conn, $sql)) {            
+            echo 1;
+        } else {
+            echo "Error : " .$sql. "<br>" .$conn -> error;
+        }
         $conn->close();
     }
 }

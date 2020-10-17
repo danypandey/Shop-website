@@ -18,7 +18,11 @@ global $crd;
 if (isset($_POST["crids"])) {
     $crd = $_POST["crids"];
     $sql = "DELETE FROM `categories` WHERE `category`='{$crd}'";
-    $result = $conn->query($sql);
+    if (mysqli_query($conn, $sql)) {            
+        echo 1;
+    } else {
+        echo "Error : " .$sql. "<br>" .$conn -> error;
+    }
     $conn->close();
 }
 
