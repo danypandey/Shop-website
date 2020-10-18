@@ -55,8 +55,55 @@
               <ul class="aa-product-catg">
 
               <?php 
+                $result_per_page =5;
+                global $categoryid;
+                global $tagid;
+                global $sq;
+                global $sql;
 
-                $sql = "SELECT * FROM products LIMIT 9";
+                if (isset($_GET["categoryId"])) {
+                    $categoryid = $_GET["categoryId"];
+                    $sq="SELECT * FROM products WHERE `category`='{$categoryid}'";
+                    $res = $conn->query($sq);
+                    $number_of_results =mysqli_num_rows($res);
+                    $number_of_pages =ceil($number_of_results / $result_per_page);
+                    //$page=$_GET['page'];
+                    if (isset($_GET['page'])) {
+                        $page=$_GET['page'];;
+                    } else {
+                        $page=1;
+                    } 
+                    $this_page_first_result = ($page-1) * $result_per_page;
+                    $sql="SELECT * FROM `products` WHERE `category`='{$categoryid}' LIMIT {$this_page_first_result}, {$result_per_page}";
+                } elseif (isset($_GET["tagId"])) {
+                    $tagid = $_GET["tagId"];
+                    $sq="SELECT * FROM products WHERE `tags`='{$tagid}'";
+                    $res = $conn->query($sq);
+                    $number_of_results =mysqli_num_rows($res);
+                    $number_of_pages =ceil($number_of_results / $result_per_page);
+                    //$page=$_GET['page'];
+                    if (isset($_GET['page'])) {
+                        $page=$_GET['page'];;
+                    } else {
+                        $page=1;
+                    } 
+                    $this_page_first_result = ($page-1) * $result_per_page;
+                    $sql="SELECT * FROM `products` WHERE `tags`='{$tagid}' LIMIT {$this_page_first_result}, {$result_per_page}";
+                } else {
+                    $sq="SELECT * FROM products";
+                    $res = $conn->query($sq);
+                    $number_of_results =mysqli_num_rows($res);
+                    $number_of_pages =ceil($number_of_results / $result_per_page);
+                    //$page=$_GET['page'];
+                    if (isset($_GET['page'])) {
+                        $page=$_GET['page'];;
+                    } else {
+                        $page=1;
+                    } 
+                    $this_page_first_result = ($page-1) * $result_per_page;
+                    $sql="SELECT * FROM `products` LIMIT {$this_page_first_result}, {$result_per_page}";
+                }             
+                
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -198,7 +245,6 @@
                     }
                 } 
                 ?>
-                 
             </div>
             <div class="aa-product-catg-pagination">
               <nav>
@@ -208,11 +254,18 @@
                       <span aria-hidden="true">&laquo;</span>
                     </a>
                   </li>
-                  <li><a href="product.php">1</a></li>
-                  <li><a href="product1.php">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">4</a></li>
-                  <li><a href="#">5</a></li>
+                  <?php
+                    for ($i=1; $i<=$number_of_pages; $i++) {
+                        if ($i==$page) {
+                            $active='active';
+                        } else {
+                            $active ='';
+                        }
+                        ?>
+                          <li <?php echo $active ?>><a href="product.php?page=<?php echo $i ?>"><?php echo $i ?></a></li>
+                        <?php 
+                    }
+                    ?>
                   <li>
                     <a href="#" aria-label="Next">
                       <span aria-hidden="true">&raquo;</span>
@@ -235,7 +288,7 @@
 
                 while ($row2=mysqli_fetch_assoc($result2)) {
                     ?>
-                    <li><a href="categorywisedisplay.php?categoryId=<?php echo $row2["category"] ?>"><?php echo $row2['name'] ?></a></li> 
+                    <li><a href="?categoryId=<?php echo $row2["category"] ?>"><?php echo $row2['name'] ?></a></li> 
                 <?php } ?>
               </ul>
             </div>
@@ -249,7 +302,7 @@
 
                 while ($row2=mysqli_fetch_assoc($result2)) {
                     ?>
-                    <a href="#"><?php echo $row2['name'] ?></a>
+                    <a href="?tagId=<?php echo $row2["name"] ?>"><?php echo $row2['name'] ?></a>
                 <?php } ?>
               </div>
             </div>
