@@ -297,7 +297,7 @@ if (isset($_FILES["imageUpload"]["name"])) {
         var price = $('#price').val();
         var filename = $("#imageUpload").val();
         var tags = [];
-        $.each($("input[name='tags']:checked"), function(){
+        $.each($("input[name='tags']:checked"), function() {
             tags.push($(this).val());
         });
         var dropdown=$("#dropdown").val();

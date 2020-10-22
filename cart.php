@@ -43,6 +43,7 @@
                     </thead>
                     <tbody>
                     <?php
+                    
 
                     if (empty($_SESSION['cart'])) {       
                         global $cart ;
@@ -76,15 +77,18 @@
                                 </tr>
 
                                 <?php
+                                
 
                             }
+                            
                         }
 
                     }   
                     if (isset($_GET['dId'])) {
                         $id=$_GET['dId'];
                         unset($_SESSION['cart'][$id]);
-                     }            
+                    }    
+                    
                     ?>
                       <tr>
                         <td colspan="6" class="aa-cart-view-bottom">
@@ -111,7 +115,7 @@
                    <tr>
                      <th>Total</th>
                      <td>$450</td>
-                   </tr>
+                   </tr>                   
                  </tbody>
                </table>
                <a href="#" class="aa-cart-view-btn">Proced to Checkout</a>

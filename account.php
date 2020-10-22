@@ -1,4 +1,56 @@
 <?php require_once 'header.php' ?>
+<?php require_once 'config.php' ?>
+
+<?php
+
+$errors = array();
+
+if (isset($_POST['registration-submit'])) {
+    $username = isset($_POST['Username']) ? $_POST['Username'] : '';
+    $password = isset($_POST['password1']) ? $_POST['password1'] : '';
+    $password2 = isset($_POST['password2']) ? $_POST['password2'] : '';
+    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $dob = isset($_POST['dob']) ? $_POST['dob'] : '';
+    $address = isset($_POST['useraddress']) ? $_POST['useraddress'] : '';
+
+    if ($password != $password2) {
+        $errors['p'] =  "passwords does not match";
+    }
+
+    if (sizeof($errors) == 0) {
+        $sql = "SELECT * FROM users";
+        $result = $conn->query($sql);
+        
+        if ($result == false) {
+            die(mysqli_error($conn));
+        } else {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {                    
+                    if ($row["name"] == $username) {
+                        $errors['u'] = "same username";
+                    } else if ($row["email"] == $email) {
+                        $errors['e'] = "same email";
+                    }
+                }
+            }
+        }
+    }
+
+    if (sizeof($errors) == 0) {
+        $sql = "INSERT INTO users (`name` ,`user_password`, `user_email`, `user_dob`, `user_address`)
+            VALUES ('".$username."', '".$password."', '".$email."', '".$dob."', '".$address."')";
+
+        if ($conn -> query($sql) == true) {
+            echo "User Added Successfully";
+        } else {
+            echo $conn -> error;
+        }
+    }
+
+    $conn -> close();
+}
+
+?>
 
   <!-- / menu -->  
  
@@ -41,14 +93,22 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="aa-myaccount-register">                 
+              <div class="aa-myaccount-register">                 
                  <h4>Register</h4>
-                 <form action="" class="aa-login-form">
-                    <label for="">Username or Email address<span>*</span></label>
-                    <input type="text" placeholder="Username or email">
-                    <label for="">Password<span>*</span></label>
-                    <input type="password" placeholder="Password">
-                    <button type="submit" class="aa-browse-btn">Register</button>                    
+                  <form action="" class="aa-login-form" method="POST">
+                    <label for="Username">Username<span>*</span></label>
+                    <input type="text" name="Username" placeholder="Username" required>
+                    <label for="email">Email Address<span>*</span></label><br>
+                      <input type="email" name="email" placeholder="Email" required>
+                    <label for="password1">Password1<span>*</span></label><br>
+                      <input type="password" name="password1" placeholder="Password" required>
+                    <label for="password2">Password2<span>*</span></label><br>
+                      <input type="password" name="password2" placeholder="Retype-Password" required>
+                    <label for="dob">D.O.B<span>*</span></label>
+                      <input type="date" name="dob" placeholder="Date Of Birth" required>
+                    <label for="useraddress">Address<span>*</span></label>
+                      <input type="text" name="useraddress" placeholder="Address" required>
+                    <button type="submit" id="registration-submit" name="registration-submit" class="aa-browse-btn">Register</button>                    
                   </form>
                 </div>
               </div>
@@ -161,15 +221,15 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4>Login or Register</h4>
           <form class="aa-login-form" action="">
-            <label for="">Username or Email address<span>*</span></label>
-            <input type="text" placeholder="Username or email">
+            <label for="">Username or Email<span>*</span></label>
+              <input type="text" placeholder="Username or Email">
             <label for="">Password<span>*</span></label>
-            <input type="password" placeholder="Password">
+              <input type="password" placeholder="Password">
             <button class="aa-browse-btn" type="submit">Login</button>
-            <label for="rememberme" class="rememberme"><input type="checkbox" id="rememberme"> Remember me </label>
+              <label for="rememberme" class="rememberme"><input type="checkbox" id="rememberme"> Remember me </label>
             <p class="aa-lost-password"><a href="#">Lost your password?</a></p>
             <div class="aa-register-now">
-              Don't have an account?<a href="account.html">Register now!</a>
+              Don't have an account?<a href="account.php">Register now!</a>
             </div>
           </form>
         </div>                        
@@ -199,7 +259,5 @@
   <script type="text/javascript" src="js/nouislider.js"></script>
   <!-- Custom js -->
   <script src="js/custom.js"></script> 
-  
-
   </body>
 </html>

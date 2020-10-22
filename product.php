@@ -63,18 +63,35 @@
 
                 if (isset($_GET["categoryId"])) {
                     $categoryid = $_GET["categoryId"];
-                    $sq="SELECT * FROM products WHERE `category`='{$categoryid}'";
-                    $res = $conn->query($sq);
-                    $number_of_results =mysqli_num_rows($res);
-                    $number_of_pages =ceil($number_of_results / $result_per_page);
-                    //$page=$_GET['page'];
-                    if (isset($_GET['page'])) {
-                        $page=$_GET['page'];;
+                    if ($categoryid == "1010") {
+                        $sq="SELECT * FROM products";
+                        $res = $conn->query($sq);
+                        $number_of_results =mysqli_num_rows($res);
+                        $number_of_pages =ceil($number_of_results / $result_per_page);
+                        //$page=$_GET['page'];
+                        if (isset($_GET['page'])) {
+                            $page=$_GET['page'];;
+                        } else {
+                            $page=1;
+                        } 
+                        $this_page_first_result = ($page-1) * $result_per_page;
+                        $sql="SELECT * FROM `products` LIMIT {$this_page_first_result}, {$result_per_page}";
                     } else {
-                        $page=1;
-                    } 
-                    $this_page_first_result = ($page-1) * $result_per_page;
-                    $sql="SELECT * FROM `products` WHERE `category`='{$categoryid}' LIMIT {$this_page_first_result}, {$result_per_page}";
+                        $sq="SELECT * FROM products WHERE `category`='{$categoryid}'";
+                        $res = $conn->query($sq);
+                        $number_of_results =mysqli_num_rows($res);
+                        $number_of_pages =ceil($number_of_results / $result_per_page);
+                        //$page=$_GET['page'];
+                        if (isset($_GET['page'])) {
+                            $page=$_GET['page'];;
+                        } else {
+                            $page=1;
+                        } 
+                        $this_page_first_result = ($page-1) * $result_per_page;
+                        $sql="SELECT * FROM `products` WHERE `category`='{$categoryid}' LIMIT {$this_page_first_result}, {$result_per_page}";
+                    }                    
+                    
+                    
                 } elseif (isset($_GET["tagId"])) {
                     $tagid = $_GET["tagId"];
                     $sq="SELECT * FROM products WHERE `tags`='{$tagid}'";
@@ -132,7 +149,7 @@
                             <?php 
 
                     }
-                } 
+                }
                     
                 ?>
                 </ul> 
@@ -207,6 +224,7 @@
                     ?>
                     <li><a href="?categoryId=<?php echo $row2["category"] ?>"><?php echo $row2['name'] ?></a></li> 
                 <?php } ?>
+                <li><a href="?categoryId=<?php echo "1010" ?>"><?php echo "All Products" ?></a></li>
               </ul>
             </div>
             <!-- single sidebar -->

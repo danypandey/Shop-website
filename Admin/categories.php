@@ -118,7 +118,7 @@ if (isset($_FILES["imageUpload"]["name"])) {
                                                     <!-- Icons -->
                                                     <input type="hidden" id="crid" name="crid" value="'.$row["category"].'">
                                                     <button type="submit" class="editbtn" name="edit" style="width:50px "><img src="resources/images/icons/pencil.png" alt="Edit" /></button>
-                                                    <button type="submit" class="deletebtn" name="delete" style="width:50px "><img src="resources/images/icons/cross.png" alt="Delete" /></button>
+                                                    <button type="submit" data-did="'.$row["category"].'" class="deletebtn" name="delete" style="width:50px "><img src="resources/images/icons/cross.png" alt="Delete" /></button>
                                                 </td>
                                                 </form>
                                             </tr>
@@ -248,7 +248,7 @@ if (isset($_FILES["imageUpload"]["name"])) {
     
 
         $('.deletebtn').click(function () {
-        var crids = $('#crid').val();
+        var crids = $(this).data('did');
         console.log(crid);
         $.ajax({
                 method: "POST",
